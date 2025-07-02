@@ -1,6 +1,31 @@
 // Vamos criar um array de produtos. Cada produto vai ter:
 // id, nome, preço e se tem ou não estoque
-const produtos = [];
+const produtos = [
+  {
+    id: 1,
+    nome: "Camiseta",
+    preco: 50,
+    temEstoque: true
+  },
+  {
+    id: 2,
+    nome: "Tênis",
+    preco: 199.90,
+    temEstoque: true
+  },
+  {
+    id: 3,
+    nome: "Jaqueta de Couro",
+    preco: 399.90,
+    temEstoque: false
+  },
+  {
+    id: 4,
+    nome: "Calça Jeans",
+    preco: 180,
+    temEstoque: true
+  },
+];
 // se lê: "crio uma lista chamada produtos, que vai guardar vários objetos com informações do produto."
 
 // Criamos uma lista chamada 'carrinho', que começa vazia. 
@@ -15,12 +40,8 @@ const finalizarBtn = document.getElementById("finalizar"); // botão para finali
 
 // Função para mostrar os produtos na tela
 function mostrarProdutos() {
-  // Usamos o for para passar por cada produto do array
-  for (let i = 0; i < produtos.length; i++) {
-    // se lê: "para cada item no array produtos, enquanto i for menor que o tamanho do array, faça."
-
-    const produto = produtos[i];
-    // se lê: "pegamos o produto que está na posição i."
+  produtos.forEach((produto) => {
+    //Aqui estamos usando o forEach para percorrer todos os produtos, um por um. O parâmetro 'produto já representa cada item do array
 
     // Criamos uma nova div para representar o produto
     const div = document.createElement("div");
@@ -42,19 +63,19 @@ function mostrarProdutos() {
     // se lê: "crio um botão."
 
     // Verificamos se o produto está em estoque
-    if (produto) {
+    if (produto.temEstoque === true) {
       botao.textContent = "Adicionar";
       botao.disabled = false; // botão ativado
       // se lê: "se o produto estiver em estoque, o texto do botão vai ser 'Adicionar' e o botão fica ativado."
     } else {
       botao.textContent = "Indisponível";
-      botao.disabled = true; // botão desativado
+      botao.disabled = false; // botão desativado
       // se lê: "se não tiver em estoque, o texto vai ser 'Indisponível' e o botão fica desativado."
     }
 
     // Quando clicar no botão, vai chamar a função para adicionar no carrinho
     botao.addEventListener("click", function () {
-      adicionarAoCarrinho();
+      adicionarAoCarrinho(produto.id);
     });
     // se lê: "quando clicar no botão, chama a função adicionarAoCarrinho, passando o id do produto."
 
@@ -67,16 +88,25 @@ function mostrarProdutos() {
     // Adicionamos essa div na div principal de produtos
     produtosDiv.appendChild(div);
     // se lê: "coloco essa div completa dentro do espaço onde aparecem os produtos."
-  }
+  })
 }
 
 // Função para adicionar um produto no carrinho
 function adicionarAoCarrinho(id) {
   // Procuramos o produto que tem o id igual ao clicado
   // Vamos usar find para achar o produto no array de produtos
-  // se lê: "procuro no array produtos o produto que tenha id igual ao que recebi."
+  const produto = produtos.find((produto) => {
+    return produto.id === id;
+  })
+    // se lê: procuro no array de produtos o item que tem o id igual ao que foi clicado
 
   // Verificamos se ele está em estoque
+  if (produto.temEstoque === true) {
+    carrinho.push(produto);
+    console.log("Adicionar", produto)
+  } else {
+    alert("Produto indispónivel")
+  }
     // se lê: "se o produto estiver em estoque, faço o próximo passo."
 
     // Se tiver, colocamos no carrinho (push) e atualizamos a tela
