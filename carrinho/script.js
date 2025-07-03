@@ -69,7 +69,7 @@ function mostrarProdutos() {
       // se lê: "se o produto estiver em estoque, o texto do botão vai ser 'Adicionar' e o botão fica ativado."
     } else {
       botao.textContent = "Indisponível";
-      botao.disabled = false; // botão desativado
+      botao.disabled = true; // botão desativado
       // se lê: "se não tiver em estoque, o texto vai ser 'Indisponível' e o botão fica desativado."
     }
 
@@ -97,23 +97,17 @@ function adicionarAoCarrinho(id) {
   // Vamos usar find para achar o produto no array de produtos
   const produto = produtos.find((produto) => {
     return produto.id === id;
-  })
     // se lê: procuro no array de produtos o item que tem o id igual ao que foi clicado
+  })
 
-  // Verificamos se ele está em estoque
-  if (produto.temEstoque === true) {
-    carrinho.push(produto);
-    console.log("Adicionar", produto)
-  } else {
-    alert("Produto indispónivel")
-  }
-    // se lê: "se o produto estiver em estoque, faço o próximo passo."
-
-    // Se tiver, colocamos no carrinho (push) e atualizamos a tela
+  if (produto.temEstoque === true) {// Verificamos se ele está em estoque
+   // se lê: "se o produto estiver em estoque, faço o próximo passo."
+    carrinho.push(produto);// Se tiver, colocamos no carrinho (push) e atualizamos a tela
+    atualizarCarrinho() //Chamamos esta function para que o item apareça no Front
     // se lê: "adiciono o produto no carrinho e atualizo a lista do carrinho."
-
-    // Se não tiver, mostramos um alerta dizendo que não tem estoque
-    // se lê: "se não tiver em estoque, mostro alerta dizendo 'Produto indisponível!'."
+  } else {// Se não tiver, mostramos um alerta dizendo que não tem estoque
+    alert("Produto indispónivel") // se lê: "se não tiver em estoque, mostro alerta dizendo 'Produto indisponível!'."
+  }
 }
 
 // Função para atualizar a lista do carrinho na tela
@@ -122,38 +116,48 @@ function atualizarCarrinho() {
   carrinhoUl.innerHTML = "";
   // se lê: "limpo o conteúdo atual do carrinho."
 
-  // Passamos por cada item do carrinho
+  carrinho.forEach ((produto) => {// Passamos por cada item do carrinho
     // se lê: "para cada produto no carrinho, faço os passos abaixo."
-
-    // Criamos um <li> para cada produto, mostrando nome e preço
+    const lista = document.createElement("li")// Criamos um <li> para cada produto, mostrando nome e preço
     // se lê: "crio um item de lista (li) e escrevo o nome e o preço do produto."
-
-    // Colocamos esse <li> na lista
+    lista.textContent = produto.nome + " - R$" + produto.preco// Colocamos esse <li> na lista
     // se lê: "coloco o li dentro do carrinho na tela."
+
+    carrinhoUl.appendChild(lista)
+  })
 }
 
 // Função para finalizar a compra
 function finalizarCompra() {
-  // Criamos uma variável para somar o valor total
+  let total = 0  // Criamos uma variável para somar o valor total
   // se lê: "crio uma variável chamada total e começo com zero."
 
-  // Passamos por cada produto no carrinho e somamos os preços
-  // se lê: "para cada produto no carrinho, somo o preço no total."
+  carrinho.forEach((item) => {    
+    total = total + item.preco // se lê: "para cada produto no carrinho, somo o preço no total."
+  })
+  
+  let cupom = prompt("Digite o seu cupom (BRINDE ou DESCONTO10):")// Perguntamos se a pessoa quer usar cupom
+    // se lê: "pergunto para a pessoa se ela quer usar um cupom."  
 
-  // Perguntamos se a pessoa quer usar cupom
-    // se lê: "pergunto para a pessoa se ela quer usar um cupom."
-
-    // Se for BRINDE, mostramos uma mensagem de brinde
+    if (cupom === "BRINDE") {// Se for BRINDE, mostramos uma mensagem de brinde
     // se lê: "se a pessoa digitar BRINDE, mostro uma mensagem dizendo que ganhou um brinde."
-
-    // Se for DESCONTO10, aplicamos 10% de desconto
+      alert("Você ganhou um brinde!!")
+    } else if (cupom === "DESCONTO10") {// Se for DESCONTO10, aplicamos 10% de desconto
     // se lê: "se digitar DESCONTO10, aplico 10% de desconto no total."
-
-    // Se não for nenhum, avisamos que não tem cupom válido
+      total = total * 0.9
+      alert("Desconto de 10% aplicado!")
+    } else {
+      alert("Nenhum cupom válido!!")// Se não for nenhum, avisamos que não tem cupom válido
     // se lê: "se não for nenhum desses, aviso que não tem cupom válido."
+    }
 
-  // Mostramos o valor total final para a pessoa
+  alert("Compra finalizada!! Total: R$" + total.toFixed(2))  // Mostramos o valor total final para a pessoa
   // se lê: "mostro para a pessoa o valor final da compra."
+
+      // Outra opção para calcular o cupom de desconto de 10% no final da compra é 
+      // let valorDesconto = total * 0.1
+      // total = total - valorDesconto
+      // alert("Desconto de 10% aplicado!" + valorDesconto)
 
   // Limpamos o carrinho
   carrinho = [];
